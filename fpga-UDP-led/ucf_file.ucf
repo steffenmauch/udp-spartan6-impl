@@ -1,0 +1,87 @@
+############################################################################
+##  File name :       example_top.ucf
+## 
+##  Details :     Constraints file
+##                    FPGA family:       spartan6
+##                    FPGA:              xc6slx45-fgg484
+##                    Speedgrade:        -2
+##                    Design Entry:      VHDL
+##                    DCM Used:          Enable
+##
+
+NET "Ethernet_COL" 			LOC = R13		|  IOSTANDARD = LVCMOS33;
+NET "Ethernet_CRS" 			LOC = T14		|  IOSTANDARD = LVCMOS33;
+NET "Ethernet_MDC" 			LOC = AA2		|  IOSTANDARD = LVCMOS33;
+NET "Ethernet_MDIO" 			LOC = AB3		|  IOSTANDARD = LVCMOS33;
+NET "Ethernet_MII_TX_CLK" 	LOC = W12		|  IOSTANDARD = LVCMOS33;
+NET "Ethernet_PHY_RST_N" 	LOC = T15		|  IOSTANDARD = LVCMOS33  |  TIG;
+
+NET "Ethernet_RXD[0]" 		LOC = Y3	|  IOSTANDARD = LVCMOS33;
+NET "Ethernet_RXD[1]" 		LOC = W8	|  IOSTANDARD = LVCMOS33;
+NET "Ethernet_RXD[2]" 		LOC = W4	|  IOSTANDARD = LVCMOS33;
+NET "Ethernet_RXD[3]" 		LOC = U9	|  IOSTANDARD = LVCMOS33;
+NET "Ethernet_RXD[4]" 		LOC = V7  |  IOSTANDARD = LVCMOS33;
+NET "Ethernet_RXD[5]" 		LOC = V5  |  IOSTANDARD = LVCMOS33;
+NET "Ethernet_RXD[6]" 		LOC = W9  |  IOSTANDARD = LVCMOS33;
+NET "Ethernet_RXD[7]" 		LOC = U6  |  IOSTANDARD = LVCMOS33;
+NET "Ethernet_RX_CLK" 		LOC = Y11	|  IOSTANDARD = LVCMOS33;
+NET "Ethernet_RX_DV" 		LOC = Y4		|  IOSTANDARD = LVCMOS33;
+NET "Ethernet_RX_ER" 		LOC = Y8		|  IOSTANDARD = LVCMOS33;
+
+NET "Ethernet_TXD[0]" 		LOC = AA18	|  IOSTANDARD = LVCMOS33;
+NET "Ethernet_TXD[1]"		LOC = AB14	|  IOSTANDARD = LVCMOS33;
+NET "Ethernet_TXD[2]" 		LOC = AA16	|  IOSTANDARD = LVCMOS33;
+NET "Ethernet_TXD[3]" 		LOC = W14	|  IOSTANDARD = LVCMOS33;
+NET "Ethernet_TXD[4]" 		LOC = T16   |  IOSTANDARD = LVCMOS33;
+NET "Ethernet_TXD[5]" 		LOC = Y14   |  IOSTANDARD = LVCMOS33;
+NET "Ethernet_TXD[6]" 		LOC = V15   |  IOSTANDARD = LVCMOS33;
+NET "Ethernet_TXD[7]" 		LOC = AA14  |  IOSTANDARD = LVCMOS33;
+NET "Ethernet_TX_CLK" 		LOC = R11  |  IOSTANDARD = LVCMOS33;
+NET "Ethernet_TX_EN" 		LOC = AB16	|  IOSTANDARD = LVCMOS33;
+NET "Ethernet_TX_ER"		LOC = AB18  |  IOSTANDARD = LVCMOS33;
+
+
+## additional constraints
+##
+##fix according to ds787_axi_ethernetlite.pdf page 33
+NET "Ethernet_RX_CLK" PERIOD = 40 ns HIGH 14 ns;
+NET "Ethernet_TX_CLK" PERIOD = 40 ns HIGH 14 ns;
+
+NET "Ethernet_TXD[*]" OFFSET = OUT 6 ns AFTER "Ethernet_TX_CLK";
+#OFFSET = IN 6 ns BEFORE "Ethernet_RX_CLK";
+
+NET "Ethernet_RXD[*]" OFFSET = IN 6 ns VALID 12 ns BEFORE "Ethernet_RX_CLK";
+NET "Ethernet_CRS" OFFSET = IN 6 ns VALID 12 ns BEFORE "Ethernet_RX_CLK";
+NET "Ethernet_COL" OFFSET = IN 6 ns VALID 12 ns BEFORE "Ethernet_RX_CLK";
+
+#NET "Ethernet_RXD[3]" IOBDELAY = NONE;
+#NET "Ethernet_RXD[2]" IOBDELAY = NONE;
+#NET "Ethernet_RXD[1]" IOBDELAY = NONE;
+#NET "Ethernet_RXD[0]" IOBDELAY = NONE;
+#NET "Ethernet_RX_DV" IOBDELAY = NONE;
+#NET "Ethernet_RX_ER" IOBDELAY = NONE;
+#NET "Ethernet_CRS" IOBDELAY = NONE;
+#NET "Ethernet_COL" IOBDELAY = NONE;
+NET "Ethernet_TX_CLK" MAXSKEW = 6.0 ns;
+NET "Ethernet_RX_CLK" MAXSKEW = 6.0 ns;
+
+#DEMO
+#NET "AD[*]" OFFSET = OUT 8.66 ns AFTER "AC[5]";
+#NET "AC[3]" OFFSET = OUT 8.66 ns AFTER "AC[5]";
+#NET "AC[1]" OFFSET = IN 9.5 ns VALID 10.5 ns BEFORE "AC[5]";
+
+
+
+############################################################################ 
+############################################################################
+# VCC AUX VOLTAGE 
+############################################################################
+CONFIG VCCAUX=2.5; # Valid values are 2.5 and 3.3
+
+NET	"LED[0]"	LOC = H8 | IOSTANDARD = LVCMOS33;            #on baseboard
+NET	"LED[1]"	LOC = J7 | IOSTANDARD = LVCMOS33;            #on baseboard
+NET	"LED[2]" LOC = T4 | IOSTANDARD = LVCMOS33;
+NET	"LED[3]" LOC = T3 | IOSTANDARD = LVCMOS33;
+
+NET  "c3_sys_clk"                                LOC = "AA12" ;
+NET  "c3_sys_rst_i"                              LOC = "W22" ; # dummy
